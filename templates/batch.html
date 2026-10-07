@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% block title %}Batch{% endblock %}{% block body %}
+<h1>Batch prediction</h1>
+<p class="lead">Upload a CSV of trips and get a predicted delay for every row. Columns: route_id, hour, day_of_week, month, weather, temperature, passenger_load, traffic_index, incident, is_holiday (missing columns use defaults). <a href="/sample.csv">Download a sample file</a>.</p>
+<form method="post" enctype="multipart/form-data" class="card drop"><input type="file" name="file" accept=".csv" required> <button class="btn" type="submit" style="margin-left:10px;padding:10px 20px">Predict all</button>
+{% if err %}<p style="color:#cf3a3a">{{err}}</p>{% endif %}</form>
+{% if table %}<h2>{{ n }} trips predicted (first 25 shown)</h2><div class="scroll">{{ table|safe }}</div><p><a class="btn" style="display:inline-block;text-decoration:none;margin-top:12px;padding:10px 20px" href="/download/{{token}}">Download all predictions (CSV)</a></p>{% endif %}
+{% endblock %}

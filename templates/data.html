@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% block title %}Data &amp; Cleaning{% endblock %}{% block body %}
+<h1>Data &amp; preprocessing</h1>
+<p class="lead">Raw file: {{ "{:,}".format(r.preprocessing.rows_raw) }} rows. After wrangling: {{ "{:,}".format(r.preprocessing.rows_clean) }} rows × {{ shape[1] }} columns.</p>
+<section class="grid2">
+  <div class="card"><h2>Wrangling steps</h2><ol class="steps">
+    {% for s in r.preprocessing.steps %}<li>{{ s }}</li>{% endfor %}</ol></div>
+  <figure class="card"><img src="/static/charts/missing.png" alt=""><figcaption>Columns with missing values before cleaning.</figcaption></figure>
+</section>
+<h2>Cleaned data (first 15 rows)</h2><div class="scroll">{{ preview|safe }}</div>
+<h2>Summary statistics</h2><div class="scroll">{{ desc|safe }}</div>
+{% endblock %}

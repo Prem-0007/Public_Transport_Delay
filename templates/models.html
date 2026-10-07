@@ -1,0 +1,19 @@
+{% extends "base.html" %}{% block title %}Models{% endblock %}{% block body %}
+<h1>Model comparison</h1>
+<p class="lead">Three algorithms for each task, hyper-parameters tuned with cross-validated search, trained on {{ r.n_train }} trips and evaluated on {{ r.n_test }} unseen trips.</p>
+<h2>1. Regression: how many minutes late?</h2>
+<div class="card"><table class="tbl"><tr><th>Model</th><th>MAE</th><th>RMSE</th><th>R²</th><th>5-fold CV R²</th><th>Tuning + train time</th></tr>
+{% for m in r.regression %}<tr class="{{ 'best' if m.model==r.best_regressor }}"><td>{{m.model}}{% if m.model==r.best_regressor %} ★{% endif %}</td><td>{{m.MAE}}</td><td>{{m.RMSE}}</td><td>{{m.R2}}</td><td>{{m.CV_R2}} ± {{m.CV_std}}</td><td>{{m.train_sec}} s</td></tr>{% endfor %}</table>
+<p class="small">Best parameters found: {% for k,v in r.tuning.items() if k.startswith('reg_') %}<b>{{k[4:]}}</b> {{v}}; {% endfor %}</p></div>
+<section class="grid2"><figure class="card"><img src="/static/charts/cmp_reg.png" alt=""></figure><figure class="card"><img src="/static/charts/actual_vs_pred.png" alt=""></figure>
+<figure class="card"><img src="/static/charts/residuals.png" alt=""><figcaption>Errors are centred on zero: {{ r.residual.within_2min }}% of predictions are within 2 min and {{ r.residual.within_5min }}% within 5 min.</figcaption></figure>
+<figure class="card"><img src="/static/charts/mae_mode.png" alt=""><figcaption>Metro is the easiest to predict; buses the hardest.</figcaption></figure></section>
+<h2>2. Classification: delayed (&gt; 5 min) or on time?</h2>
+<div class="card"><table class="tbl"><tr><th>Model</th><th>Accuracy</th><th>Precision</th><th>Recall</th><th>F1</th><th>ROC-AUC</th><th>CV F1</th></tr>
+{% for m in r.classification %}<tr class="{{ 'best' if m.model==r.best_classifier }}"><td>{{m.model}}{% if m.model==r.best_classifier %} ★{% endif %}</td><td>{{m.Accuracy}}</td><td>{{m.Precision}}</td><td>{{m.Recall}}</td><td>{{m.F1}}</td><td>{{m.ROC_AUC}}</td><td>{{m.CV_F1}}</td></tr>{% endfor %}</table></div>
+<section class="grid2"><figure class="card"><img src="/static/charts/cmp_clf.png" alt=""></figure><figure class="card"><img src="/static/charts/roc.png" alt=""></figure></section>
+<figure class="card"><img src="/static/charts/confusion.png" alt=""><figcaption>Confusion matrices of the three classifiers.</figcaption></figure>
+<h2>3. What drives delay?</h2>
+<figure class="card"><img src="/static/charts/feat_imp.png" alt="" style="max-width:600px"></figure>
+<div class="card note"><h2>Conclusion</h2><p>★ marks the best model on each task. When scores are close the simpler model is easier to explain; tree ensembles capture interactions such as peak hour × traffic. The Predict page shows all models side by side, with the main factors behind each prediction.</p></div>
+{% endblock %}

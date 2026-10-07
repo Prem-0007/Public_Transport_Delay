@@ -1,0 +1,34 @@
+{% extends "base.html" %}{% block title %}Dashboard{% endblock %}{% block body %}
+<h1>Interactive dashboard</h1><p class="lead">Filter the trips and every chart updates instantly. Hover over a bar or point for the exact value.</p>
+<div class="card filters">
+<label>Mode<select id="f_mode"><option>All</option>{% for m in modes %}<option>{{m}}</option>{% endfor %}</select></label>
+<label>Weather<select id="f_weather"><option>All</option>{% for m in weather %}<option>{{m}}</option>{% endfor %}</select></label>
+<label>Day<select id="f_day"><option>All</option>{% for m in days %}<option>{{m}}</option>{% endfor %}</select></label>
+<label>Time<select id="f_peak"><option value="">All hours</option><option value="1">Peak hours</option><option value="0">Off-peak</option></select></label>
+<button class="btn" id="reset" type="button">Reset</button></div>
+<section class="kpis" id="kpis"></section>
+<section class="grid2">
+<div class="card"><h2>Average delay by hour</h2><canvas id="c_hour" height="230"></canvas></div>
+<div class="card"><h2>Average delay by route</h2><canvas id="c_route" height="230"></canvas></div>
+<div class="card"><h2>Average delay by weather</h2><canvas id="c_weather" height="230"></canvas></div>
+<div class="card"><h2>Average delay by day of week</h2><canvas id="c_day" height="230"></canvas></div>
+<div class="card"><h2>Average delay by month</h2><canvas id="c_month" height="230"></canvas></div></section>
+<div id="tip" class="tip"></div>
+<script src="{{ url_for('static', filename='charts.js') }}"></script>
+<script>
+const ids=['f_mode','f_weather','f_day','f_peak'];
+function load(){
+  const q=new URLSearchParams({mode:f_mode.value,weather:f_weather.value,day:f_day.value,peak:f_peak.value});
+  fetch('/api/stats?'+q).then(r=>r.json()).then(d=>{
+    if(d.empty){kpis.innerHTML='<div class="card">No trips match these filters.</div>';return;}
+    kpis.innerHTML=`<div class="kpi"><b>${d.trips.toLocaleString()}</b><span>trips</span></div><div class="kpi"><b>${d.avg} min</b><span>average delay</span></div>
+    <div class="kpi"><b>${d.pct}%</b><span>trips over 5 min late</span></div><div class="kpi"><b>${d.max} min</b><span>longest delay</span></div>
+    <div class="kpi"><b>${d.incident_avg===null?'–':d.incident_avg+' min'}</b><span>avg delay when an incident occurs</span></div>`;
+    drawBars('c_hour',d.hour,'#127c82',true); drawBars('c_route',d.route,'#1d2733'); drawBars('c_weather',d.weather,'#e8a317');
+    drawBars('c_day',d.day,'#127c82'); drawBars('c_month',d.month,'#e0702b');
+  });
+}
+ids.forEach(i=>document.getElementById(i).addEventListener('change',load));
+reset.onclick=()=>{ids.forEach(i=>document.getElementById(i).selectedIndex=0);load();};
+window.addEventListener('resize',load); load();
+</script>{% endblock %}

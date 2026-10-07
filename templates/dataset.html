@@ -1,0 +1,27 @@
+{% extends "base.html" %}{% block title %}Dataset{% endblock %}{% block body %}
+<h1>Dataset &amp; cleaning report</h1>
+<p class="lead">{{ d.source }}.</p>
+<section class="kpis">
+<div class="kpi"><b>{{ "{:,}".format(d.rows_raw) }}</b><span>rows in raw file ({{ d.cols_raw }} columns)</span></div>
+<div class="kpi"><b>{{ "{:,}".format(d.rows_clean) }}</b><span>rows after cleaning ({{ d.cols_clean }} columns)</span></div>
+<div class="kpi"><b>{{ d.rows_removed }}</b><span>rows removed (duplicates)</span></div>
+<div class="kpi"><b>{{ d.missing_cells_before }} → {{ d.missing_cells_after }}</b><span>missing cells before → after</span></div>
+<div class="kpi"><b>{{ d.date_min }} → {{ d.date_max }}</b><span>date range</span></div></section>
+<figure class="card"><img src="/static/charts/data_funnel.png" alt=""><figcaption>Left: row counts before and after cleaning. Right: missing values per column before and after.</figcaption></figure>
+<section class="grid2">
+<div class="card"><h2>What the cleaning did</h2><table class="tbl">
+<tr><th>Step</th><th>Result</th></tr>
+<tr><td>Raw rows</td><td>{{ "{:,}".format(d.rows_raw) }}</td></tr>
+<tr><td>Duplicate rows removed</td><td>{{ d.duplicates }}</td></tr>
+<tr><td>Inconsistent weather labels fixed (e.g. 'RAIN ')</td><td>{{ d.label_fixes }}</td></tr>
+<tr><td>Missing values imputed</td><td>{{ d.imputed_total }}</td></tr>
+<tr><td>Delay outliers capped at {{ d.cap_value }} min</td><td>{{ d.outliers }}</td></tr>
+<tr><td><b>Clean rows used for analysis</b></td><td><b>{{ "{:,}".format(d.rows_clean) }}</b></td></tr></table></div>
+<div class="card"><h2>Missing values per column</h2><table class="tbl"><tr><th>Column</th><th>Missing (raw)</th><th>%</th><th>After</th></tr>
+{% for m in d.missing_table %}<tr><td>{{m.column}}</td><td>{{m.before}}</td><td>{{m.pct}}%</td><td>{{m.after}}</td></tr>{% endfor %}</table></div></section>
+<figure class="card"><img src="/static/charts/composition.png" alt=""><figcaption>Composition of the clean data.</figcaption></figure>
+<h2>Data dictionary</h2><div class="scroll"><table class="tbl"><tr><th>Column</th><th>Type</th><th>Meaning</th><th>Example</th></tr>
+{% for c in d.dictionary %}<tr><td><b>{{c.column}}</b></td><td>{{c.type}}</td><td>{{c.meaning}}</td><td>{{c.example}}</td></tr>{% endfor %}</table></div>
+<h2>Clean data preview</h2><div class="scroll">{{ preview|safe }}</div>
+<h2>Summary statistics</h2><div class="scroll">{{ desc|safe }}</div>
+{% endblock %}

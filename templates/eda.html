@@ -1,0 +1,24 @@
+{% extends "base.html" %}{% block title %}Exploration{% endblock %}{% block body %}
+<h1>Exploratory data analysis</h1>
+<p class="lead">What the data says about when, where and why delays happen.</p>
+{% set items = [
+ ('delay_dist','Most trips are close to on time, with a long tail of serious delays.'),
+ ('violin','Distribution of delay for each mode: wide for buses, tight for metro.'),
+ ('heat_day_hour','Weekday rush hours form clear hot spots; weekends are calmer.'),
+ ('route_hour','Each route has its own rush-hour signature; road-based routes are hit hardest.'),
+ ('by_weather','Snow and storms shift the whole distribution upward.'),
+ ('weather_mode','Bad weather hurts buses and trams far more than the metro.'),
+ ('by_route','Route ranking: long, stop-heavy bus routes lead the list.'),
+ ('peak_mode','Share of delayed trips: peak versus off-peak for each mode.'),
+ ('traffic_scatter','Delay grows with traffic for road-based modes only.'),
+ ('load','Crowded vehicles (over 80% load) take longer at stops.'),
+ ('incident','An incident adds roughly 14 minutes on average.'),
+ ('rolling','The 14-day rolling average shows the delay level is stable through the year.'),
+ ('by_day','Delay by day of week.'),
+ ('by_month','Delay by month.'),
+] %}
+<section class="grid2">
+{% for n,c in items %}<figure class="card"><img src="/static/charts/{{n}}.png" alt=""><figcaption>{{c}}</figcaption></figure>{% endfor %}
+</section>
+<figure class="card"><img src="/static/charts/corr.png" alt="" style="max-width:640px"><figcaption>Correlation between numeric variables and delay.</figcaption></figure>
+{% endblock %}

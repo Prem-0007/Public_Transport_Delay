@@ -1,0 +1,33 @@
+{% extends "base.html" %}{% block title %}Predict{% endblock %}{% block body %}
+<h1>Predict a trip's delay</h1>
+<p class="lead">Describe the trip and conditions. All trained models respond, with a likely range and the factors behind the answer.</p>
+<section class="predict">
+<form method="post" class="card form">
+  <label>Route<select name="route_id">{% for k,v in routes.items() %}<option value="{{k}}" {{ 'selected' if f.route_id==k }}>{{k}} · {{v.mode}}</option>{% endfor %}</select></label>
+  <label>Day<select name="day_of_week">{% for d in days %}<option {{ 'selected' if f.day_of_week==d }}>{{d}}</option>{% endfor %}</select></label>
+  <label>Hour (0–23)<input type="number" name="hour" min="0" max="23" value="{{f.hour}}"></label>
+  <label>Month (1–12)<input type="number" name="month" min="1" max="12" value="{{f.month}}"></label>
+  <label>Weather<select name="weather">{% for w in weather %}<option {{ 'selected' if f.weather==w }}>{{w}}</option>{% endfor %}</select></label>
+  <label>Temperature (°C)<input type="number" step="0.1" name="temperature" value="{{f.temperature}}"></label>
+  <label>Passenger load (%)<input type="range" name="passenger_load" min="0" max="130" value="{{f.passenger_load}}" oninput="pl.value=this.value"><output id="pl">{{f.passenger_load}}</output></label>
+  <label>Traffic index (0–100)<input type="range" name="traffic_index" min="0" max="100" value="{{f.traffic_index}}" oninput="ti.value=this.value"><output id="ti">{{f.traffic_index}}</output></label>
+  <label>Incident reported<select name="incident"><option value="0" {{ 'selected' if f.incident|string=='0' }}>No</option><option value="1" {{ 'selected' if f.incident|string=='1' }}>Yes</option></select></label>
+  <label>Public holiday<select name="is_holiday"><option value="0" {{ 'selected' if f.is_holiday|string=='0' }}>No</option><option value="1" {{ 'selected' if f.is_holiday|string=='1' }}>Yes</option></select></label>
+  <button class="btn" type="submit">Predict delay</button>
+</form>
+<div>
+{% if res %}
+  <div class="card result {{res.level}}"><span>{{ res.label }}</span><b>{{ res.pred }} min</b>
+    <small>{{ res.best }} estimate · {{ res.prob }}% chance of being more than 5 minutes late</small>
+    <div class="range">Likely range (Random Forest trees, 10th–90th percentile): <b>{{ res.lo }} – {{ res.hi }} min</b></div></div>
+  {% if res.why %}<div class="card"><h2>Why this prediction?</h2><p class="small">Change in predicted delay compared with a normal, calm trip (clear weather, typical traffic and load, no incident, off-peak).</p>
+    <div class="why">{% for w in res.why %}<div class="{{ 'up' if w.delta>0 else 'dn' }}"><span>{{w.factor}}</span><i style="width:{{ (w.delta|abs / res.wmax * 100)|round }}%"></i><b>{{ '+' if w.delta>0 }}{{w.delta}} min</b></div>{% endfor %}</div></div>{% endif %}
+  <div class="card"><h2>All models</h2>
+    <table class="tbl"><tr><th>Model</th><th>Delay (min)</th><th>P(delayed)</th></tr>
+    {% for n,v in res.reg.items() %}<tr><td>{{n}}</td><td>{{v}}</td><td>{{ res.clf[n] if n in res.clf else res.clf['Logistic Regression'] }}%</td></tr>{% endfor %}</table>
+    <p class="small">Linear Regression's delay is paired with Logistic Regression's probability.</p></div>
+{% else %}
+  <div class="card hint">Fill in the form and press <b>Predict delay</b>. Try Snow + 08:00 + Bus B45 against Clear + 14:00 + Metro M1. Developers can also call <code>POST /api/predict</code> with JSON.</div>
+{% endif %}
+</div></section>
+{% endblock %}

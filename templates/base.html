@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}Transit Delay Lab{% endblock %}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head><body>
+<header class="top"><div class="wrap bar">
+  <a class="brand" href="/"><span class="dot"></span>Transit Delay Lab</a>
+  <nav>{% set p = request.path %}
+    <a href="/" class="{{ 'on' if p=='/' }}">Overview</a>
+    <a href="/dataset" class="{{ 'on' if p=='/dataset' }}">Dataset</a>
+    <a href="/dashboard" class="{{ 'on' if p=='/dashboard' }}">Dashboard</a>
+    <a href="/eda" class="{{ 'on' if p=='/eda' }}">Exploration</a>
+    <a href="/models" class="{{ 'on' if p=='/models' }}">Models</a>
+    <a href="/predict" class="{{ 'on' if p=='/predict' }}">Predict</a>
+    <a href="/batch" class="{{ 'on' if p=='/batch' }}">Batch</a>
+  </nav></div></header>
+<main class="wrap">{% block body %}{% endblock %}</main>
+<footer class="wrap foot">Public Transport Delay Analysis · Data Analytics &amp; Visualization Mini Project</footer>
+</body></html>

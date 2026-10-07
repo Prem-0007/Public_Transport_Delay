@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% block body %}
+<section class="hero"><h1>Why are our buses, trams and trains late?</h1>
+<p>{{ "{:,}".format(d.rows_clean) }} clean trips across {{ d.routes }} routes and {{ d.modes }} modes: what drives delay, and models that predict it before the trip starts.</p></section>
+<section class="kpis">
+<div class="kpi"><b>{{ "{:,}".format(d.rows_raw) }} → {{ "{:,}".format(d.rows_clean) }}</b><span>rows before → after cleaning</span></div>
+<div class="kpi"><b>{{ s.avg_delay }} min</b><span>average delay</span></div>
+<div class="kpi"><b>{{ s.pct_delayed }}%</b><span>trips over 5 minutes late</span></div>
+<div class="kpi"><b>{{ s.worst_route }}</b><span>most delayed route</span></div>
+<div class="kpi"><b>{{ "%02d:00"|format(s.worst_hour) }}</b><span>worst hour of the day</span></div>
+<div class="kpi"><b>R² {{ (r.regression|selectattr('model','equalto',r.best_regressor)|first).R2 }}</b><span>{{ r.best_regressor }} (best model)</span></div></section>
+<section class="grid2">
+<figure class="card"><img src="/static/charts/by_hour.png" alt=""><figcaption>Delays climb sharply in the morning and evening rush.</figcaption></figure>
+<figure class="card"><img src="/static/charts/violin.png" alt=""><figcaption>Buses share the road and suffer most; metro runs on its own track.</figcaption></figure></section>
+<section class="card note"><h2>Key findings</h2><ul>
+<li>Strongest drivers of delay (permutation importance): <b>{{ r.top_features[:5]|join(", ") }}</b>.</li>
+<li>Best delay-minutes model: <b>{{ r.best_regressor }}</b> (within 2 minutes of the truth on {{ r.residual.within_2min }}% of test trips). Best classifier: <b>{{ r.best_classifier }}</b>.</li>
+<li>Explore the <a href="/dataset">dataset</a>, play with the <a href="/dashboard">interactive dashboard</a>, or <a href="/predict">predict a trip</a>.</li></ul></section>
+{% endblock %}
