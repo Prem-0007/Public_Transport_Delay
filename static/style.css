@@ -37,3 +37,201 @@ input[type=range]{padding:0;accent-color:var(--teal)}output{color:var(--ink);fon
 canvas{width:100%;display:block}.why{display:grid;gap:7px;margin-top:6px}.why div{display:grid;grid-template-columns:110px 1fr 54px;gap:8px;align-items:center;font-size:.86rem}
 .why i{display:block;height:11px;border-radius:5px}.up i{background:#cf3a3a}.dn i{background:#2e9e5b}.range{font-size:.9rem;color:var(--mut);margin-top:6px}
 nav a{margin-left:16px;font-size:.93rem}.drop{border:2px dashed var(--line);border-radius:10px;padding:18px;text-align:center}
+@media (max-width: 600px) {
+
+    body {
+        font-size: 15px;
+    }
+
+    .wrap {
+        padding: 0 14px;
+    }
+
+    .bar {
+        height: auto;
+        min-height: 58px;
+        padding: 8px 0;
+        gap: 6px;
+    }
+
+    .brand {
+        font-size: .95rem;
+    }
+
+    nav {
+        width: 100%;
+        display: flex;
+        overflow-x: auto;
+        gap: 4px;
+        scrollbar-width: none;
+    }
+
+    nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    nav a,
+    nav a:hover,
+    nav a.on {
+        margin-left: 0;
+        padding: 8px 10px;
+        font-size: .82rem;
+        white-space: nowrap;
+        border-bottom: 2px solid transparent;
+    }
+
+    nav a.on {
+        border-color: var(--amber);
+    }
+
+    h1 {
+        font-size: 1.65rem;
+        margin-top: 24px;
+    }
+
+    h2 {
+        font-size: 1.1rem;
+    }
+
+    .hero {
+        padding: 24px 0 4px;
+    }
+
+    .hero h1 {
+        font-size: 1.85rem;
+        max-width: none;
+    }
+
+    .hero p {
+        font-size: 1rem;
+    }
+
+    .lead {
+        font-size: .95rem;
+    }
+
+    .kpis {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin: 16px 0;
+    }
+
+    .kpi {
+        padding: 12px;
+        border-left-width: 4px;
+    }
+
+    .kpi b {
+        font-size: 1.35rem;
+    }
+
+    .kpi span {
+        font-size: .78rem;
+    }
+
+    .grid2 {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .card {
+        padding: 13px;
+        margin-bottom: 12px;
+        border-radius: 9px;
+    }
+
+    .predict {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    .form {
+        gap: 10px;
+    }
+
+    input,
+    select {
+        width: 100%;
+        min-height: 44px;
+        padding: 9px 10px;
+    }
+
+    input[type=range] {
+        min-height: auto;
+    }
+
+    .btn {
+        width: 100%;
+        min-height: 46px;
+        padding: 11px;
+    }
+
+    .result {
+        border-left-width: 6px;
+        padding: 14px;
+    }
+
+    .result b {
+        font-size: 2.4rem;
+    }
+
+    .result span {
+        font-size: .9rem;
+    }
+
+    .result small {
+        font-size: .8rem;
+    }
+
+    .filters {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+
+    .filters label {
+        width: 100%;
+    }
+
+    .filters .btn {
+        width: 100%;
+    }
+
+    .scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .tbl {
+        min-width: 650px;
+        font-size: .82rem;
+    }
+
+    .tbl th,
+    .tbl td {
+        padding: 7px 8px;
+    }
+
+    .why div {
+        grid-template-columns: 90px 1fr 45px;
+        gap: 6px;
+        font-size: .78rem;
+    }
+
+    .why i {
+        height: 9px;
+    }
+
+    .drop {
+        padding: 15px 10px;
+    }
+
+    .foot {
+        padding: 24px 10px;
+        text-align: center;
+    }
+
+    canvas {
+        max-width: 100%;
+    }
+}
