@@ -51,5 +51,5 @@ src/        config, preprocessing, data_report, eda, modeling
 models/     saved models + results.json
 static/     style.css, charts.js, charts/
 templates/  HTML pages
-lala
+
 ```
